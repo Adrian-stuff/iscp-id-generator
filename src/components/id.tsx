@@ -7,7 +7,7 @@ type IdCardTypes = {
   // picture?: Picture;
   name: string;
   qrValue: string;
-  picture: string;
+  picture?: string;
   campus: string;
   course: string;
   studentID: string;
@@ -98,21 +98,21 @@ const IdCard: React.FC<IdCardTypes> = ({
       />
 
       <div className="flex flex-col items-center justify-center">
-        <div className="z-10 absolute mt-[-94px] ml-[2px] w-[172px] h-[170px]">
+        <div className="z-10 absolute top-[170px] ml-[2px] w-[172px] h-[170px]">
           <img
             className="absolute rounded-full object-cover left-[-0.68px] top-0  aspect-square"
             src={picture ? picture : "/image-placeholder.png"}
             alt="id picture"
           />
         </div>
-        <div className="z-10 max-w-[200px] mt-[370px]">
-          <h1 className="text-center  text-white text-lg font-normal">
-            {name}
+        <div className="z-10 max-w-[200px] mt-[365px]">
+          <h1 className="text-center leading-none text-white text-lg font-normal">
+            {name.trim().length === 0 ? "Name goes here" : name}
           </h1>
-          <h1 className="text-center -mt-1 text-white text-sm font-light">
+          <h1 className="text-center text-white text-sm font-light">
             {studentID}
           </h1>
-          <h1 className="text-center mt-4 text-white text-lg font-normal">
+          <h1 className="text-center mt-2 text-white text-lg font-normal">
             {course}
           </h1>
           <h1 className="text-center  text-white text-lg font-normal">

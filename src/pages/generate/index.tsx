@@ -1,19 +1,37 @@
-import { toPng } from "html-to-image";
+import { toBlob, toPng } from "html-to-image";
 import { GetServerSideProps, NextPage } from "next";
 import Head from "next/head";
 import { ChangeEvent, useEffect, useState } from "react";
 import IdCard from "../../components/id";
 import { RandomUser } from "../../types/mockData";
-
+import { Session, unstable_getServerSession } from "next-auth";
+import { authOptions } from "../api/auth/[...nextauth]";
+import { generateRandomID } from "../../lib/randomID";
+import { uploadImage } from "../../lib/storage";
 const GeneratePage: NextPage<{
-  data: { user: RandomUser; campuses: string[]; courses: string[] };
+  data: {
+    session: Session;
+    campuses: string[];
+    courses: string[];
+  };
 }> = ({ data }) => {
   const [previewImage, setPreviewImage] = useState("");
-  const [selectedImage, setSelectedImage] = useState("");
-  const [name, setName] = useState("Name here");
+  const [selectedImage, setSelectedImage] = useState(
+    data.session.user?.image?.replace(/=s96-c/g, "")
+  );
+  const [name, setName] = useState(data.session.user?.name);
   const [course, setCourse] = useState(data.courses[0] ?? "");
   const [campus, setCampus] = useState("ISCP-Main");
-  const [qrCode, setQRCode] = useState("Tite");
+  const [studentID, setStudentID] = useState("");
+  const [qrCode, setQRCode] = useState(
+    "https://www.youtube.com/watch?v=dQw4w9WgXcQ"
+  );
+
+  useEffect(() => {
+    const randomID = generateRandomID();
+    setStudentID(randomID);
+    setQRCode(`https://iscpid.web.app/s/${randomID}`);
+  }, []);
   const generateImage = () => {
     toPng(document.getElementById("idCard") as HTMLElement, {
       quality: 1,
@@ -26,6 +44,20 @@ const GeneratePage: NextPage<{
     })
       .then((dataUrl) => {
         setPreviewImage(dataUrl);
+        // uploadImage()
+      })
+      .catch((e) => console.log(e));
+
+    toBlob(document.getElementById("idCard") as HTMLElement, {
+      quality: 1,
+      width: 400,
+      height: 679,
+      canvasWidth: 400,
+      canvasHeight: 679,
+    })
+      .then((file) => {
+        if (file === null) return;
+        uploadImage(file, studentID);
       })
       .catch((e) => console.log(e));
   };
@@ -55,12 +87,12 @@ const GeneratePage: NextPage<{
       <main className="container mx-auto px-10 mt-10 items-center justify-center font-montserrat">
         <div className="flex items-center justify-center ">
           <IdCard
-            name={name}
-            picture={selectedImage}
+            name={name ? name : "Name goes here"}
+            picture={selectedImage!}
             campus={campus}
             course={course}
             qrValue={qrCode}
-            studentID="12090129378"
+            studentID={studentID}
           />
         </div>
         <div className="mt-10 flex flex-col justify-center">
@@ -69,14 +101,10 @@ const GeneratePage: NextPage<{
             id="name"
             type="text"
             maxLength={40}
+            value={name ?? "Name goes here"}
             onChange={(e) => setName(e.target.value)}
           />
-          <label htmlFor="qrValue">QR Value</label>
-          <input
-            id="qrValue"
-            type="text"
-            onChange={(e) => setQRCode(e.target.value)}
-          />
+
           <select onChange={(e) => setCampus(e.target.value)}>
             {data.campuses.map((campus, i) => (
               <option key={i} value={campus}>
@@ -100,15 +128,28 @@ const GeneratePage: NextPage<{
   );
 };
 export const getServerSideProps: GetServerSideProps = async (context) => {
-  const res = await fetch("https://randomuser.me/api/");
-  const userData: RandomUser = await res.json();
   const campuses = ["ISCP - Moon Campus", "ISCP - Meow Meow", "ISCP - ARFA RF"];
   const courses = ["BS - Moon Campus", "BS - Meow Meow", "BS - ARFA RF"];
+
+  const session = await unstable_getServerSession(
+    context.req,
+    context.res,
+    authOptions
+  );
+
+  if (!session) {
+    return {
+      redirect: {
+        destination: "/",
+        permanent: false,
+      },
+    };
+  }
 
   return {
     props: {
       data: {
-        user: userData,
+        session: session,
         campuses: campuses,
         courses: courses,
       },

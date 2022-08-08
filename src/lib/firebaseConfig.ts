@@ -1,5 +1,5 @@
 // Import the functions you need from the SDKs you need
-import { initializeApp } from "firebase/app";
+import { FirebaseOptions, getApp, initializeApp } from "firebase/app";
 import { getAnalytics } from "firebase/analytics";
 import { getFirestore } from "firebase/firestore/lite";
 import { getStorage } from "firebase/storage";
@@ -10,7 +10,7 @@ import { getStorage } from "firebase/storage";
 // For Firebase JS SDK v7.20.0 and later, measurementId is optional
 
 const firebaseConfig = {
-  apiKey: process.env.FIREBASE_APIKEY,
+  apiKey: process.env.FIREBASE_API_KEY,
   authDomain: process.env.FIREBASE_AUTH_DOMAIN,
   projectId: process.env.FIREBASE_PROJECT_ID,
   storageBucket: process.env.FIREBASE_STORAGE_BUCKET,
@@ -19,9 +19,20 @@ const firebaseConfig = {
   measurementId: process.env.FIREBASE_MEASUREMENT_ID,
 };
 
+function createFirebaseApp(config: FirebaseOptions) {
+  try {
+    return getApp();
+  } catch {
+    return initializeApp(config);
+  }
+}
 // Initialize Firebase
-const app = initializeApp(firebaseConfig);
-const analytics = getAnalytics(app);
+const app = createFirebaseApp(firebaseConfig);
+
+let analytics;
+if (app.name && typeof window !== "undefined") {
+  analytics = getAnalytics(app);
+}
 const db = getFirestore(app);
 const storage = getStorage(app);
 export { db, analytics, storage };
