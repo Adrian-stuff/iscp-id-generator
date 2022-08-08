@@ -1,50 +1,136 @@
 import React from "react";
+import { QRCode } from "react-qrcode-logo";
 import { Name, Picture, RandomUser } from "../types/mockData";
 
 type IdCardTypes = {
-  name?: Name;
+  // name?: Name;
   // picture?: Picture;
+  name: string;
+  qrValue: string;
   picture: string;
+  campus: string;
+  course: string;
+  studentID: string;
 };
 
-const IdCard: React.FC<IdCardTypes> = ({ name, picture }) => {
+const IdCard: React.FC<IdCardTypes> = ({
+  name,
+  qrValue,
+  picture,
+  campus,
+  course,
+  studentID,
+}) => {
   return (
-    <div id="idCard">
-      <div className="grid grid-flow-col grid-cols-2 gap-12 font-poppins p-6">
-        <div className="flex flex-col ">
-          <div className="mb-4">
-            <p className="leading-normal font-extrabold text-lg">LOGO</p>
-            <p className="font-normal text-xs">
-              International State College of the Philippines
-            </p>
-          </div>
-          <div className="grid grid-flow-col grid-cols-2">
-            <img
-              className="rounded-xl border-[3px] border-blue-600 "
-              // src={picture?.large}
-              src={picture}
-              alt={name ? `${name.first} ${name.last}` : "upload image"}
-            />
-          </div>
-          <div className="font-normal text-sm mt-4">
-            <p>School Address,Street,State,1234</p>
-            <p>Telephone</p>
-          </div>
+    //     <div id="idCard" className="relative  bg-local w-[650px] h-[412px] ">
+    //       <img
+    //         className="w-full absolute"
+    //         src="/id card.png"
+    //         alt="id card background"
+    //       />
+
+    //       <div className="flex flex-col items-center absolute w-[184px] h-[184px] top-[94px] left-[78px]">
+    //         <QRCode
+    //           ecLevel="H"
+    //           logoHeight={100}
+    //           logoWidth={100}
+    //           logoOpacity={0.5}
+    //           eyeRadius={[
+    //             10, // top/left eye
+    //             10, // top/right eye
+    //             10, // bottom/left eye
+    //           ]}
+    //           qrStyle="dots"
+    //           logoImage="/ISCP-LOGO.png"
+    //           value={qrValue}
+    //         ></QRCode>
+    //         <h1 className="text-lg font-base py-5 text-justify leading-none">
+    //           {studentID}
+    //         </h1>
+    //       </div>
+    //       <img
+    //         className=" absolute max-w-[200px] max-h-[200px]  left-[400px] top-[100px] "
+    //         src={picture ? picture : "/image-placeholder.png"}
+    //         alt="2x2"
+    //       />
+
+    //       {/* <h1 className="absolute w-[267px] h-[54px] left-[70px] top-[330px] text-xl font-semibold text-center text-white">
+    //         {campus}
+    //       </h1> */}
+    //       <div className="flex flex-row h-full w-full pb-2">
+    //         <div className="z-10 flex flex-col-reverse">
+    //           <h1 className="break-words pb-[70px] pl-[60px] w-[300px] h-[75px] text-xl font-semibold text-center text-white">
+    //             {campus}
+    //           </h1>
+    //         </div>
+    //         {/* info */}
+    //         <div className="z-10 flex flex-1 flex-col-reverse ">
+    //           <div className="flex flex-row-reverse ">
+    //             <div className="flex flex-col pt-4 mb-16 w-[250px] h-[50px]">
+    //               <h1 className="text-lg font-semibold break-words pr-4 text-left leading-none ">
+    //                 {name}
+    //               </h1>
+    //               <h1 className="text-lg font-bold break-words pr-4 text-left leading-none ">
+    //                 {course}
+    //               </h1>
+    //             </div>
+    //           </div>
+    //         </div>
+    //       </div>
+
+    //       {/* #tZUYUBATUM {
+    //   position: absolute;
+    //   left: 467px;
+    //   top: 247.8px;
+    //   width: 162px;
+    //   height: 48px;
+    //   font-family: Poppins;
+    //   font-size: 16px;
+    //   font-weight: 600;
+    // }
+    //  */}
+    //     </div>
+    <div id="idCard" className="relative min-w-[400.28px] min-h-[680.39px]">
+      <img
+        className="w-full absolute"
+        src="/id card portrait.png"
+        alt="id card"
+      />
+
+      <div className="flex flex-col items-center justify-center">
+        <div className="z-10 absolute mt-[-94px] ml-[2px] w-[172px] h-[170px]">
+          <img
+            className="absolute rounded-full object-cover left-[-0.68px] top-0  aspect-square"
+            src={picture ? picture : "/image-placeholder.png"}
+            alt="id picture"
+          />
         </div>
-        <div className="flex flex-col py-2 col-span-3 ">
-          <div className="text-center ">
-            <h1 className="font-bold text-xl leading-tight">
-              International State College of the Philippines
-            </h1>
-            <h2 className="font-semi text-lg leading-none">blabla Campus</h2>
-          </div>
-          <div className="text-justify mt-4">
-            <p className="font-medium">Student ID: 1234</p>
-            <p className="font-medium ">
-              Name: {`${name?.first} ${name?.last}`}
-            </p>
-            <p className="font-medium ">{`${name?.first} ${name?.last}`}</p>
-          </div>
+        <div className="z-10 max-w-[200px] mt-[370px]">
+          <h1 className="text-center  text-white text-lg font-normal">
+            {name}
+          </h1>
+          <h1 className="text-center -mt-1 text-white text-sm font-light">
+            {studentID}
+          </h1>
+          <h1 className="text-center mt-4 text-white text-lg font-normal">
+            {course}
+          </h1>
+          <h1 className="text-center  text-white text-lg font-normal">
+            {campus}
+          </h1>
+        </div>
+        <div className="z-10 mt-[-1px] justify-center">
+          <QRCode
+            size={100}
+            logoHeight={100}
+            logoWidth={100}
+            logoOpacity={0.5}
+            bgColor="#050a30"
+            fgColor="#3a9bdc"
+            qrStyle="dots"
+            // logoImage="/ISCP-LOGO.png"
+            value={qrValue}
+          ></QRCode>
         </div>
       </div>
     </div>
