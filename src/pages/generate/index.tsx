@@ -143,8 +143,8 @@ const GeneratePage: NextPage<{
           <select onChange={(e) => setCampus(e.target.value)} value={campus}>
             <option value={undefined}>select campus</option>
             {data.campusArray.map((campus, i) => (
-              <option key={i} value={campus}>
-                {campus}
+              <option key={i} value={campus.toUpperCase()}>
+                {campus.toUpperCase()}
               </option>
             ))}
           </select>
@@ -152,8 +152,8 @@ const GeneratePage: NextPage<{
             <option value="">select course</option>
 
             {data.campusMap[campus]?.courses.map((campus, i) => (
-              <option key={i} value={campus}>
-                {campus}
+              <option key={i} value={campus.toUpperCase()}>
+                {campus.toUpperCase()}
               </option>
             ))}
           </select>
