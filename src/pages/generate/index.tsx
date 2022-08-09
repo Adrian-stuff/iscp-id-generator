@@ -153,7 +153,7 @@ const GeneratePage: NextPage<{
 
             {data.campusMap[campus]?.courses.map((campus, i) => (
               <option key={i} value={campus}>
-                {campus.toUpperCase()}
+                {campus}
               </option>
             ))}
           </select>
