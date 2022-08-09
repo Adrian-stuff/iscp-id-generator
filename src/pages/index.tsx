@@ -37,6 +37,10 @@ const Home: NextPage = () => {
           name="description"
           content="International State College of the Philippines"
         />
+        <meta
+          name="google-site-verification"
+          content="gWKxT9wSWcpHTF-QXZRt_vIvGxhUojfqF3j8YRfoMkU"
+        />
         <link rel="icon" href="/favicon.ico" />
       </Head>
 
