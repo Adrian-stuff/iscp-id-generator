@@ -85,6 +85,11 @@ const GeneratePage: NextPage<{
         });
         if (file === null) return;
         uploadIDImage(file, studentID);
+        const url = URL.createObjectURL(file);
+        const link = document.createElement("a");
+        link.href = url;
+        link.download = "ISCP-ID.png";
+        link.click();
         if (blobImage === undefined) return;
         uploadAvatarImage(blobImage, studentID);
       })
