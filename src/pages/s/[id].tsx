@@ -13,8 +13,7 @@ const Id: NextPage<{ userData: UserData; image: string }> = ({
     <>
       <Head>
         <title>
-          {userData.student_info.name} | International State College of the
-          Philippines Identification System
+          {`${userData.student_info.name} | International State College of the Philippines Identification System`}
         </title>
         <meta property="og:image" content={image} />
         <meta
@@ -31,7 +30,10 @@ const Id: NextPage<{ userData: UserData; image: string }> = ({
 };
 
 export const getServerSideProps: GetServerSideProps = async (context) => {
-  const { id } = context.params;
+  const id = context.params?.id as string;
+  if (id === undefined)
+    return { redirect: { destination: "/", permanent: false } };
+
   const userData = await getUserWithID(id);
   if (userData.empty) {
     return { redirect: { destination: "/", permanent: false } };
