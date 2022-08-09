@@ -106,7 +106,7 @@ const IdCard: React.FC<IdCardTypes> = ({
       <div className="flex flex-col items-center justify-center">
         <div className="z-10 absolute top-[170.5px] ml-[3.359px] w-[172px] h-[170px]">
           <img
-            className="absolute rounded-full object-cover left-[-0.68px] top-0  aspect-square"
+            className="absolute rounded-full object-cover left-[-0.68px] top-0 aspect-square"
             src={picture ? picture : "/image-placeholder.png"}
             crossOrigin="anonymous"
             alt="id picture"
