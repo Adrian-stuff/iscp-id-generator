@@ -115,10 +115,10 @@ const IdCard: React.FC<IdCardTypes> = ({
             {studentID}
           </h1>
           <h1 className="text-center leading-tight mt-2 text-white text-lg font-normal">
-            {course}
+            {course.toUpperCase()}
           </h1>
           <h1 className="text-center leading-none text-white text-lg font-normal">
-            {campus}
+            {campus.toUpperCase()}
           </h1>
         </div>
         <div className="z-10 mt-[-1px] justify-center">
