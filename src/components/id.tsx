@@ -6,9 +6,11 @@ type IdCardTypes = {
   // name?: Name;
   // picture?: Picture;
   name: string;
+  withQr: boolean;
   defaultName?: string;
-  qrValue: string;
+  qrValue?: string;
   picture?: string;
+  spacing?: number;
   campus: string;
   course: string;
   studentID: string;
@@ -17,8 +19,10 @@ type IdCardTypes = {
 const IdCard: React.FC<IdCardTypes> = ({
   name,
   defaultName = name,
+  withQr,
   qrValue,
   picture,
+  spacing,
   campus,
   course,
   studentID,
@@ -115,26 +119,31 @@ const IdCard: React.FC<IdCardTypes> = ({
           <h1 className="text-center text-white text-sm font-light">
             {studentID}
           </h1>
-          <h1 className="text-center leading-tight mt-2 text-white text-lg font-normal">
+          <h1
+            style={{ marginTop: spacing ?? undefined }}
+            className="text-center leading-tight mt-2 text-white text-lg font-normal"
+          >
             {course}
           </h1>
           <h1 className="text-center leading-none text-white text-lg font-normal">
             {campus.toUpperCase()}
           </h1>
         </div>
-        <div className="z-10 mt-[-1px] justify-center">
-          <QRCode
-            size={100}
-            logoHeight={100}
-            logoWidth={100}
-            logoOpacity={0.5}
-            bgColor="#050a30"
-            fgColor="#3a9bdc"
-            qrStyle="dots"
-            // logoImage="/ISCP-LOGO.png"
-            value={qrValue}
-          ></QRCode>
-        </div>
+        {withQr && (
+          <div className="z-10 mt-[-1px] justify-center">
+            <QRCode
+              size={114}
+              logoHeight={100}
+              logoWidth={100}
+              logoOpacity={0.5}
+              bgColor="#050a30"
+              fgColor="#3a9bdc"
+              qrStyle="dots"
+              // logoImage="/ISCP-LOGO.png"
+              value={qrValue}
+            ></QRCode>
+          </div>
+        )}
       </div>
     </div>
   );

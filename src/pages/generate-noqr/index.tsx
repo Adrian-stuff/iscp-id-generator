@@ -25,55 +25,34 @@ const GeneratePage: NextPage<{
   };
 }> = ({ data }) => {
   const [previewImage, setPreviewImage] = useState("");
-  const [selectedImage, setSelectedImage] = useState(
-    data.avatarUrl ?? data.session.user?.image!.replace(/=s96-c/g, "")
-  );
-  const [blobImage, setBlobImage] = useState<Blob | File>();
-  const [name, setName] = useState(
-    data.user?.student_info.name ?? (data.session.user?.name as string)
-  );
+  const [selectedImage, setSelectedImage] = useState("");
+  const [name, setName] = useState("Meow Meow Batumbakal");
   const [course, setCourse] = useState(
-    data.user?.student_info.course ??
-      (data.campusMap[data.campusArray[0] as string]?.courses[0] as string)
+    data.campusMap[data.campusArray[0] as string]?.courses[0] as string
   );
-  const [campus, setCampus] = useState(
-    data.user?.student_info.campus ?? (data.campusArray[0] as string)
-  );
-  const [studentID, setStudentID] = useState(data.user?.student_id ?? "");
-  const [qrCode, setQRCode] = useState(
-    data.user?.student_id
-      ? `https://iscpid.vercel.app/s/${data.user.student_id}`
-      : "https://www.youtube.com/watch?v=dQw4w9WgXcQ"
-  );
+  const [campus, setCampus] = useState(data.campusArray[0] as string);
+  const [studentID, setStudentID] = useState("");
   const [isLoading, setIsLoading] = useState(false);
+  const [useDefaultImage, setUseDefaultImage] = useState(false);
 
   const fileRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
-    if (studentID.length === 0) {
-      const randomID = generateRandomID();
-      setStudentID(randomID);
-      setQRCode(`https://iscpid.vercel.app/s/${randomID}`);
-    }
+    const randomID = generateRandomID();
+    setStudentID(randomID);
   }, []);
   const generateImage = () => {
+    if (
+      name.trim().length === 0 ||
+      (!useDefaultImage && selectedImage.trim().length === 0) ||
+      campus.trim().length === 0
+    ) {
+      alert("baliw k tlga hwahahwa \nSAGUTAN MO LAHAT WOY");
+      return;
+    }
+
     setIsLoading(true);
     setPreviewImage("");
-    toPng(document.getElementById("idCard") as HTMLElement, {
-      quality: 1,
-      // canvasWidth: 650,
-      // canvasHeight: 412,\400.28px] h-[680.39px
-      width: 400,
-      height: 679,
-      canvasWidth: 400,
-      canvasHeight: 679,
-    })
-      .then((dataUrl) => {
-        setPreviewImage(dataUrl);
-        // uploadImage()
-      })
-      .catch((e) => console.log(e));
-
     toBlob(document.getElementById("idCard") as HTMLElement, {
       quality: 1,
       width: 400,
@@ -82,22 +61,13 @@ const GeneratePage: NextPage<{
       canvasHeight: 679,
     })
       .then((file) => {
-        if (typeof data.session.user?.email !== "string") return;
-        setUser(data.session.user?.email, {
-          defaultAvatar: data.session.user?.image!.replace(/=s96-c/g, ""),
-          student_id: studentID,
-          student_info: { campus, course, name },
-        });
         if (file === null) return;
-        uploadIDImage(file, studentID);
         setIsLoading(false);
         const url = URL.createObjectURL(file);
         const link = document.createElement("a");
         link.href = url;
         link.download = "ISCP-ID.png";
         link.click();
-        if (blobImage === undefined) return;
-        uploadAvatarImage(blobImage, studentID);
       })
 
       .catch((e) => console.log("toBlob", e));
@@ -111,7 +81,6 @@ const GeneratePage: NextPage<{
 
     // setSelectedImage(e.target.files[0]);
     const objectUrl = URL.createObjectURL(e.target.files[0] as File);
-    setBlobImage(e.target.files[0] as File);
     setSelectedImage(objectUrl);
   };
 
@@ -133,12 +102,16 @@ const GeneratePage: NextPage<{
         <div className="flex items-center justify-center ">
           <IdCard
             name={name}
-            defaultName={data.user?.student_info.name}
-            picture={selectedImage!}
+            defaultName={"Meow Meow Batumbakal"}
+            picture={
+              selectedImage.trim().length === 0
+                ? "/Cute-Cat.jpg"
+                : selectedImage
+            }
+            spacing={45}
             campus={campus}
             course={course}
-            withQr={true}
-            qrValue={qrCode}
+            withQr={false}
             studentID={studentID}
           />
         </div>
@@ -150,15 +123,18 @@ const GeneratePage: NextPage<{
           )}
           <div className="flex flex-col max-w-sm ">
             <div className="flex flex-col p-1">
-              <label htmlFor="name">Name</label>
+              <h1 className="font-bold">Required lahat</h1>
+              <label htmlFor="name">Name </label>
               <input
+                required
                 id="name"
                 type="text"
                 maxLength={40}
-                value={name ?? "Name goes here"}
+                value={name}
                 onChange={(e) => setName(e.target.value)}
               />
             </div>
+
             <div className="flex flex-col p-1">
               <label htmlFor="campus">Campus</label>
               <select
@@ -189,25 +165,33 @@ const GeneratePage: NextPage<{
                 ))}
               </select>
             </div>
-
             <div className="flex flex-col p-1">
-              <label htmlFor="avatarUpload">
-                Upload your image here: (optional)
-              </label>
+              <label htmlFor="avatarUpload">Upload your image here:</label>
               <input ref={fileRef} type="file" onChange={handleImageChange} />
-              {blobImage && (
+              {selectedImage.trim().length !== 0 && (
                 <button
                   onClick={() => {
                     fileRef.current!.value = "";
-                    setSelectedImage(
-                      data.avatarUrl ??
-                        data.session.user?.image!.replace(/=s96-c/g, "")
-                    );
+                    setSelectedImage("");
                   }}
                 >
                   Remove Uploaded Image
                 </button>
               )}
+              <div className="flex flex-row items-center justify-around">
+                <label htmlFor="useDefaultImage">
+                  Use default image? (cat meow meow)
+                </label>
+                <input
+                  id="useDefaultImage"
+                  type="checkbox"
+                  checked={useDefaultImage}
+                  onChange={() => {
+                    setSelectedImage("");
+                    setUseDefaultImage(!useDefaultImage);
+                  }}
+                />
+              </div>
             </div>
             {/* {data.avatarUrl !== null && (
             <button onClick={() => console.log(studentID)}>
@@ -231,32 +215,9 @@ const GeneratePage: NextPage<{
 };
 export const getServerSideProps: GetServerSideProps = async (context) => {
   const [campusArray, campusMap] = await getCampuses();
-  console.log("campusMap", campusMap);
-  console.log("campusArray", campusArray);
-
-  const session = await unstable_getServerSession(
-    context.req,
-    context.res,
-    authOptions
-  );
-
-  if (!session) {
-    return {
-      redirect: {
-        destination: "/",
-        permanent: false,
-      },
-    };
-  }
-  const user = await getUserWithEmail(session.user?.email as string);
-  const avatarUrl = await getAvatarImage(user?.student_id as string);
-  console.log(user, avatarUrl);
   return {
     props: {
       data: {
-        session: session,
-        user: user ?? null,
-        avatarUrl: avatarUrl?.split("&token")[0] ?? null,
         campusArray,
         campusMap,
       },
