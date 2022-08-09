@@ -104,7 +104,7 @@ const GeneratePage: NextPage<{
             name={name}
             defaultName={"Meow Meow Batumbakal"}
             picture={
-              selectedImage.trim().length === 0
+              selectedImage.trim().length === 0 || useDefaultImage
                 ? "/Cute-Cat.jpg"
                 : selectedImage
             }
@@ -172,7 +172,7 @@ const GeneratePage: NextPage<{
                 <button
                   onClick={() => {
                     fileRef.current!.value = "";
-                    setSelectedImage("");
+                    // setSelectedImage("");
                   }}
                 >
                   Remove Uploaded Image
@@ -187,7 +187,7 @@ const GeneratePage: NextPage<{
                   type="checkbox"
                   checked={useDefaultImage}
                   onChange={() => {
-                    setSelectedImage("");
+                    // setSelectedImage("");
                     setUseDefaultImage(!useDefaultImage);
                   }}
                 />
