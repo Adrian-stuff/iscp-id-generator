@@ -45,6 +45,7 @@ const GeneratePage: NextPage<{
       ? `https://iscpid.vercel.app/s/${data.user.student_id}`
       : "https://www.youtube.com/watch?v=dQw4w9WgXcQ"
   );
+  const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
     if (studentID.length === 0) {
@@ -54,6 +55,8 @@ const GeneratePage: NextPage<{
     }
   }, []);
   const generateImage = () => {
+    setIsLoading(true);
+    setPreviewImage("");
     toPng(document.getElementById("idCard") as HTMLElement, {
       quality: 1,
       // canvasWidth: 650,
@@ -85,6 +88,7 @@ const GeneratePage: NextPage<{
         });
         if (file === null) return;
         uploadIDImage(file, studentID);
+        setIsLoading(false);
         const url = URL.createObjectURL(file);
         const link = document.createElement("a");
         link.href = url;
@@ -123,7 +127,7 @@ const GeneratePage: NextPage<{
         <link rel="icon" href="/favicon.ico" />
       </Head>
 
-      <main className="container mx-auto px-10 mt-10 items-center justify-center font-montserrat">
+      <main className="container mx-auto px-10 mt-5 items-center justify-center font-montserrat">
         <div className="flex items-center justify-center ">
           <IdCard
             name={name}
@@ -135,41 +139,74 @@ const GeneratePage: NextPage<{
             studentID={studentID}
           />
         </div>
-        <div className="mt-10 flex flex-col justify-center">
-          <label htmlFor="name">Name</label>
-          <input
-            id="name"
-            type="text"
-            maxLength={40}
-            value={name ?? "Name goes here"}
-            onChange={(e) => setName(e.target.value)}
-          />
+        <div className="mt-5 flex flex-col justify-center items-center">
+          {isLoading && (
+            <h1 className="text-lg font-bold text-center">
+              Loading please wait...
+            </h1>
+          )}
+          <div className="flex flex-col ">
+            <div className="flex flex-col p-1">
+              <label htmlFor="name">Name</label>
+              <input
+                id="name"
+                type="text"
+                maxLength={40}
+                value={name ?? "Name goes here"}
+                onChange={(e) => setName(e.target.value)}
+              />
+            </div>
+            <div className="flex flex-col p-1">
+              <label htmlFor="campus">Course</label>
 
-          <select onChange={(e) => setCampus(e.target.value)} value={campus}>
-            <option value={undefined}>select campus</option>
-            {data.campusArray.map((campus, i) => (
-              <option key={i} value={campus}>
-                {campus.toUpperCase()}
-              </option>
-            ))}
-          </select>
-          <select onChange={(e) => setCourse(e.target.value)} value={course}>
-            <option value="">select course</option>
-
-            {data.campusMap[campus]?.courses.map((campus, i) => (
-              <option key={i} value={campus}>
-                {campus}
-              </option>
-            ))}
-          </select>
-          <input type="file" onChange={handleImageChange} />
-          {data.avatarUrl !== null && (
+              <select
+                onChange={(e) => setCourse(e.target.value)}
+                value={course}
+              >
+                <option value="">select course</option>
+                {data.campusMap[campus]?.courses.map((campus, i) => (
+                  <option key={i} value={campus}>
+                    {campus}
+                  </option>
+                ))}
+              </select>
+            </div>
+            <div className="flex flex-col p-1">
+              <label htmlFor="campus">Campus</label>
+              <select
+                id="campus"
+                onChange={(e) => setCampus(e.target.value)}
+                value={campus}
+              >
+                <option value={undefined}>select campus</option>
+                {data.campusArray.map((campus, i) => (
+                  <option key={i} value={campus}>
+                    {campus.toUpperCase()}
+                  </option>
+                ))}
+              </select>
+            </div>
+            <div className="flex flex-col p-1">
+              <label htmlFor="avatarUpload">
+                Upload your image here: (optional)
+              </label>
+              <input type="file" onChange={handleImageChange} />
+            </div>
+            {/* {data.avatarUrl !== null && (
             <button onClick={() => console.log(studentID)}>
               Delete Avatar
             </button>
-          )}
-          <img src={previewImage} />
-          <button onClick={generateImage}>Generate</button>
+          )} */}
+            {/* <img src={previewImage} /> */}
+            <div className="flex flex-col p-1">
+              <button
+                className="border-2 rounded-lg p-2 bg-blue-400"
+                onClick={generateImage}
+              >
+                Generate
+              </button>
+            </div>
+          </div>
         </div>
       </main>
     </>
