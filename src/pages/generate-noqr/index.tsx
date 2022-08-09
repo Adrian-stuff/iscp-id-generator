@@ -26,7 +26,7 @@ const GeneratePage: NextPage<{
 }> = ({ data }) => {
   const [previewImage, setPreviewImage] = useState("");
   const [selectedImage, setSelectedImage] = useState("");
-  const [name, setName] = useState("Meow Meow Batumbakal");
+  const [name, setName] = useState("");
   const [course, setCourse] = useState(
     data.campusMap[data.campusArray[0] as string]?.courses[0] as string
   );
@@ -130,7 +130,8 @@ const GeneratePage: NextPage<{
                 id="name"
                 type="text"
                 maxLength={40}
-                value={name}
+                defaultValue="Meow Meow Batumbakal"
+                value={name.trim().length !== 0 ? name : undefined}
                 onChange={(e) => setName(e.target.value)}
               />
             </div>
