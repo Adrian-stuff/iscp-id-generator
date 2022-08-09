@@ -42,7 +42,7 @@ const GeneratePage: NextPage<{
   const [studentID, setStudentID] = useState(data.user?.student_id ?? "");
   const [qrCode, setQRCode] = useState(
     data.user?.student_id
-      ? `https://iscpid.web.app/s/${data.user.student_id}`
+      ? `https://iscpid.vercel.app/s/${data.user.student_id}`
       : "https://www.youtube.com/watch?v=dQw4w9WgXcQ"
   );
 
@@ -50,7 +50,7 @@ const GeneratePage: NextPage<{
     if (studentID.length === 0) {
       const randomID = generateRandomID();
       setStudentID(randomID);
-      setQRCode(`https://iscpid.web.app/s/${randomID}`);
+      setQRCode(`https://iscpid.vercel.app/s/${randomID}`);
     }
   }, []);
   const generateImage = () => {
