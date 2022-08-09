@@ -17,7 +17,9 @@ const Home: NextPage = () => {
   return (
     <>
       <Head>
-        <title>Create T3 App</title>
+        <title>
+          International State College of the Philippines Identification System
+        </title>
         <meta
           name="description"
           content="International State College of the Philippines"

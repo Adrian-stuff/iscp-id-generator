@@ -6,6 +6,7 @@ type IdCardTypes = {
   // name?: Name;
   // picture?: Picture;
   name: string;
+  defaultName?: string;
   qrValue: string;
   picture?: string;
   campus: string;
@@ -15,6 +16,7 @@ type IdCardTypes = {
 
 const IdCard: React.FC<IdCardTypes> = ({
   name,
+  defaultName = name,
   qrValue,
   picture,
   campus,
@@ -105,17 +107,17 @@ const IdCard: React.FC<IdCardTypes> = ({
             alt="id picture"
           />
         </div>
-        <div className="z-10 max-w-[200px] mt-[365px]">
+        <div className="z-10 max-w-[300px] mt-[365px]">
           <h1 className="text-center leading-none text-white text-lg font-normal">
-            {name.trim().length === 0 ? "Name goes here" : name}
+            {name.trim().length === 0 ? defaultName : name}
           </h1>
           <h1 className="text-center text-white text-sm font-light">
             {studentID}
           </h1>
-          <h1 className="text-center mt-2 text-white text-lg font-normal">
+          <h1 className="text-center leading-tight mt-2 text-white text-lg font-normal">
             {course}
           </h1>
-          <h1 className="text-center  text-white text-lg font-normal">
+          <h1 className="text-center leading-none text-white text-lg font-normal">
             {campus}
           </h1>
         </div>

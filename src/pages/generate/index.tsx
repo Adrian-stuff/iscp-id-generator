@@ -4,33 +4,54 @@ import Head from "next/head";
 import { ChangeEvent, useEffect, useState } from "react";
 import IdCard from "../../components/id";
 import { RandomUser } from "../../types/mockData";
-import { Session, unstable_getServerSession } from "next-auth";
+import { DefaultSession, Session, unstable_getServerSession } from "next-auth";
 import { authOptions } from "../api/auth/[...nextauth]";
 import { generateRandomID } from "../../lib/randomID";
-import { uploadImage } from "../../lib/storage";
+import {
+  deleteAvatarImage,
+  getAvatarImage,
+  uploadAvatarImage,
+  uploadIDImage,
+} from "../../lib/storage";
+import { getUserWithEmail, setUser, UserData } from "../../models/userModel";
+import { CampusMap, getCampuses } from "../../models/iscpData";
 const GeneratePage: NextPage<{
   data: {
     session: Session;
-    campuses: string[];
-    courses: string[];
+    user?: UserData;
+    avatarUrl: string;
+    campusArray: string[];
+    campusMap: CampusMap;
   };
 }> = ({ data }) => {
   const [previewImage, setPreviewImage] = useState("");
   const [selectedImage, setSelectedImage] = useState(
-    data.session.user?.image?.replace(/=s96-c/g, "")
+    data.avatarUrl ?? data.session.user?.image!.replace(/=s96-c/g, "")
   );
-  const [name, setName] = useState(data.session.user?.name);
-  const [course, setCourse] = useState(data.courses[0] ?? "");
-  const [campus, setCampus] = useState("ISCP-Main");
-  const [studentID, setStudentID] = useState("");
+  const [blobImage, setBlobImage] = useState<Blob | File>();
+  const [name, setName] = useState(
+    data.user?.student_info.name ?? (data.session.user?.name as string)
+  );
+  const [course, setCourse] = useState(
+    data.user?.student_info.course ??
+      (data.campusMap[data.campusArray[0] as string]?.courses[0] as string)
+  );
+  const [campus, setCampus] = useState(
+    data.user?.student_info.campus ?? (data.campusArray[0] as string)
+  );
+  const [studentID, setStudentID] = useState(data.user?.student_id ?? "");
   const [qrCode, setQRCode] = useState(
-    "https://www.youtube.com/watch?v=dQw4w9WgXcQ"
+    data.user?.student_id
+      ? `https://iscpid.web.app/s/${data.user.student_id}`
+      : "https://www.youtube.com/watch?v=dQw4w9WgXcQ"
   );
 
   useEffect(() => {
-    const randomID = generateRandomID();
-    setStudentID(randomID);
-    setQRCode(`https://iscpid.web.app/s/${randomID}`);
+    if (studentID.length === 0) {
+      const randomID = generateRandomID();
+      setStudentID(randomID);
+      setQRCode(`https://iscpid.web.app/s/${randomID}`);
+    }
   }, []);
   const generateImage = () => {
     toPng(document.getElementById("idCard") as HTMLElement, {
@@ -56,10 +77,19 @@ const GeneratePage: NextPage<{
       canvasHeight: 679,
     })
       .then((file) => {
+        if (typeof data.session.user?.email !== "string") return;
+        setUser(data.session.user?.email, {
+          defaultAvatar: data.session.user?.image!.replace(/=s96-c/g, ""),
+          student_id: studentID,
+          student_info: { campus, course, name },
+        });
         if (file === null) return;
-        uploadImage(file, studentID);
+        uploadIDImage(file, studentID);
+        if (blobImage === undefined) return;
+        uploadAvatarImage(blobImage, studentID);
       })
-      .catch((e) => console.log(e));
+
+      .catch((e) => console.log("toBlob", e));
   };
 
   const handleImageChange = (e: ChangeEvent<HTMLInputElement>) => {
@@ -70,16 +100,20 @@ const GeneratePage: NextPage<{
 
     // setSelectedImage(e.target.files[0]);
     const objectUrl = URL.createObjectURL(e.target.files[0] as File);
+    setBlobImage(e.target.files[0] as File);
     setSelectedImage(objectUrl);
   };
 
   return (
     <>
       <Head>
-        <title>Generate ID</title>
+        <title>
+          Generate ID | International State College of the Philippines
+          Identification System
+        </title>
         <meta
           name="description"
-          content="International State College of the Philippines"
+          content="International State College of the Philippines Identification System"
         />
         <link rel="icon" href="/favicon.ico" />
       </Head>
@@ -87,7 +121,8 @@ const GeneratePage: NextPage<{
       <main className="container mx-auto px-10 mt-10 items-center justify-center font-montserrat">
         <div className="flex items-center justify-center ">
           <IdCard
-            name={name ? name : "Name goes here"}
+            name={name}
+            defaultName={data.user?.student_info.name}
             picture={selectedImage!}
             campus={campus}
             course={course}
@@ -105,21 +140,29 @@ const GeneratePage: NextPage<{
             onChange={(e) => setName(e.target.value)}
           />
 
-          <select onChange={(e) => setCampus(e.target.value)}>
-            {data.campuses.map((campus, i) => (
+          <select onChange={(e) => setCampus(e.target.value)} value={campus}>
+            <option value={undefined}>select campus</option>
+            {data.campusArray.map((campus, i) => (
               <option key={i} value={campus}>
                 {campus}
               </option>
             ))}
           </select>
-          <select onChange={(e) => setCourse(e.target.value)}>
-            {data.courses.map((course, i) => (
-              <option key={i} value={course}>
-                {course}
+          <select onChange={(e) => setCourse(e.target.value)} value={course}>
+            <option value="">select course</option>
+
+            {data.campusMap[campus]?.courses.map((campus, i) => (
+              <option key={i} value={campus}>
+                {campus}
               </option>
             ))}
           </select>
           <input type="file" onChange={handleImageChange} />
+          {data.avatarUrl !== null && (
+            <button onClick={() => console.log(studentID)}>
+              Delete Avatar
+            </button>
+          )}
           <img src={previewImage} />
           <button onClick={generateImage}>Generate</button>
         </div>
@@ -128,8 +171,9 @@ const GeneratePage: NextPage<{
   );
 };
 export const getServerSideProps: GetServerSideProps = async (context) => {
-  const campuses = ["ISCP - Moon Campus", "ISCP - Meow Meow", "ISCP - ARFA RF"];
-  const courses = ["BS - Moon Campus", "BS - Meow Meow", "BS - ARFA RF"];
+  const [campusArray, campusMap] = await getCampuses();
+  console.log("campusMap", campusMap);
+  console.log("campusArray", campusArray);
 
   const session = await unstable_getServerSession(
     context.req,
@@ -145,13 +189,17 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
       },
     };
   }
-
+  const user = await getUserWithEmail(session.user?.email as string);
+  const avatarUrl = await getAvatarImage(user?.student_id as string);
+  console.log(user, avatarUrl);
   return {
     props: {
       data: {
         session: session,
-        campuses: campuses,
-        courses: courses,
+        user: user ?? null,
+        avatarUrl: avatarUrl?.split("&token")[0] ?? null,
+        campusArray,
+        campusMap,
       },
     }, // will be passed to the page component as props
   };
