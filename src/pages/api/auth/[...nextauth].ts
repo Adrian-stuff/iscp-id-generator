@@ -11,7 +11,7 @@ export const authOptions: NextAuthOptions = {
       clientSecret: process.env.GOOGLE_SECRET as string,
     }),
   ],
-  secret: process.env.SECRET,
+  secret: process.env.NEXT_PUBLIC_SECRET,
   // adapter: FirestoreAdapter(db),
 };
 export default NextAuth(authOptions);
