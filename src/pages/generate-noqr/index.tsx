@@ -172,7 +172,7 @@ const GeneratePage: NextPage<{
                 <button
                   onClick={() => {
                     fileRef.current!.value = "";
-                    // setSelectedImage("");
+                    setSelectedImage("");
                   }}
                 >
                   Remove Uploaded Image

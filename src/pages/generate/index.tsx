@@ -199,6 +199,7 @@ const GeneratePage: NextPage<{
                 <button
                   onClick={() => {
                     fileRef.current!.value = "";
+                    setBlobImage(undefined);
                     setSelectedImage(
                       data.avatarUrl ??
                         data.session.user?.image!.replace(/=s96-c/g, "")
