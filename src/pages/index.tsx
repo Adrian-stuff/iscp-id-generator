@@ -2,6 +2,7 @@ import type { NextPage } from "next";
 import { signIn, useSession } from "next-auth/react";
 import Head from "next/head";
 import Link from "next/link";
+import Credits from "../components/credits";
 
 const Home: NextPage = () => {
   const { data: session } = useSession();
@@ -59,6 +60,7 @@ const Home: NextPage = () => {
             </button>
           )}
         </h1>
+        <Credits></Credits>
       </main>
     </>
   );

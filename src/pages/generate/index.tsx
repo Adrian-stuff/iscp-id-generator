@@ -15,6 +15,7 @@ import {
 } from "../../lib/storage";
 import { getUserWithEmail, setUser, UserData } from "../../models/userModel";
 import { CampusMap, getCampuses } from "../../models/iscpData";
+import Credits from "../../components/credits";
 const GeneratePage: NextPage<{
   data: {
     session: Session;
@@ -226,6 +227,7 @@ const GeneratePage: NextPage<{
             </div>
           </div>
         </div>
+        <Credits></Credits>
       </main>
     </>
   );

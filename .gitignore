@@ -39,3 +39,4 @@ firebase-debug.log
 # typescript
 *.tsbuildinfo
 .firebase/hosting.YnVpbGQ.cache
+src/pages/data-editor/index.tsx
