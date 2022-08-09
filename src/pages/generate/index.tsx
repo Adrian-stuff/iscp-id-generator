@@ -139,13 +139,13 @@ const GeneratePage: NextPage<{
             studentID={studentID}
           />
         </div>
-        <div className="mt-5 flex flex-col justify-center items-center">
+        <div className=" px-10 mt-5 flex flex-col justify-center items-center">
           {isLoading && (
             <h1 className="text-lg font-bold text-center">
               Loading please wait...
             </h1>
           )}
-          <div className="flex flex-col ">
+          <div className="flex flex-col max-w-sm ">
             <div className="flex flex-col p-1">
               <label htmlFor="name">Name</label>
               <input
