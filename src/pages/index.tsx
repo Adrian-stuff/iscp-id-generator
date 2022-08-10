@@ -59,7 +59,9 @@ const Home: NextPage = () => {
           {session ? (
             <Link href="/generate">Generate ID with qr code feature</Link>
           ) : (
-            <button onClick={() => signIn("google")}>
+            <button
+              onClick={() => signIn("google", { callbackUrl: "/generate" })}
+            >
               Generate ID with qr code feature
             </button>
           )}
