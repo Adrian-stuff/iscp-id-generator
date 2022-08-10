@@ -50,6 +50,7 @@ const getCampuses = async () => {
         "BSIT - imissyou whahahha",
         "BS IN imissyou whahahha",
         "BA IN PHILOSOPHY",
+        "BS PSYCHOLOGY - MAJOR IN OVERTHINKING",
       ],
     },
     "ISCP - Pluto Campus": { courses: [""] },
