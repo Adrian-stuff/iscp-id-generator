@@ -57,7 +57,7 @@ const GeneratePage: NextPage<{
 
     const randomID = generateRandomID();
     setStudentID(randomID);
-  }, []);
+  }, [data.campusArray, data.campusMap]);
   const generateImage = () => {
     if (
       name.trim().length === 0 ||

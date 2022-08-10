@@ -80,7 +80,7 @@ const GeneratePage: NextPage<{
       setStudentID(randomID);
       setQRCode(`https://iscpid.vercel.app/s/${randomID}`);
     }
-  }, []);
+  }, [data.campusArray, data.campusMap]);
   const generateImage = () => {
     setIsLoading(true);
     setPreviewImage("");
