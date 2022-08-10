@@ -181,7 +181,6 @@ const GeneratePage: NextPage<{
                 onChange={(e) => setCourse(e.target.value)}
                 value={course}
               >
-                <option value="">select course</option>
                 {Object.entries(data.campusMap).map(([campusName, object], i) =>
                   Object.values(object.courses).map((course, i) => {
                     return course.trim().length !== 0 ? (
