@@ -51,7 +51,7 @@ const getCampuses = async () => {
         "BS IN imissyou whahahha",
         "BA IN PHILOSOPHY",
         "BS PSYCHOLOGY - MAJOR IN OVERTHINKING",
-        "BS PSYCHOLOGY - MAJOR IN GASLIGHTING",
+        "BS PSYCHOLOGY - MAJOR IN GASLIGHTING AND MANIPULATION",
         "BS PSYCHOLOGY - MAJOR IN LOVE BOMBING",
       ],
     },
