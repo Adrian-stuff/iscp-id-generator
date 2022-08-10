@@ -23,6 +23,8 @@ export interface Campus {
 export interface CampusMap {
   [campus: string]: Campus;
 }
+
+// TODO: IMPLEMENT A MUCH BETTER AND EFFICIENT SETUP
 const getCampuses = async () => {
   // const data = await getDoc(doc(db, "iscpDATA", "campuses"));
   // const res = data.data();
