@@ -54,7 +54,7 @@ const getCampuses = async () => {
     "ISCP - Amazon Extension": { courses: [""] },
     "ISCP - Main Campus Luzon Extension": { courses: [""] },
     "ISCP Med School - Main Campus": {
-      courses: ["MAJOY IN DNA ENGINEERING", "BS IN NURSING"],
+      courses: ["MAJOR IN DNA ENGINEERING", "BS IN NURSING"],
     },
     "ISCP - Low Earth Orbit Ext": {
       courses: ["BS IN METEOROLOGY", "BS IN AERO-NAUTICAL ENGINEERING"],
