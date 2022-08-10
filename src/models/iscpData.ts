@@ -86,7 +86,7 @@ const getCampuses = async () => {
     "ISCP - Chernobyl Extension": { courses: ["BS IN MEDICAL TECHNOLOGY"] },
     "ISCP - dj loonyo int'l airport ext": { courses: [""] },
     "ISCP - Encantadia Extension": { courses: ["BS IN CULINARY ARTS"] },
-    "ISPC — May Kawayan Bulacan Campus": { courses: [""] },
+    "ISPC - May Kawayan Bulacan Campus": { courses: [""] },
   };
   const campus: string[] = [];
   if (res !== undefined) {
