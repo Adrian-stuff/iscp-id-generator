@@ -52,9 +52,11 @@ const Home: NextPage = () => {
             alt="International State College of the Philippines"
           />
         </div>
-        <h1 className="text-5xl mt-2 md:text-[5rem] leading-normal font-extrabold text-gray-700 border-4 border-green-200 p-4 bg-green-400 rounded-[25px]">
-          <Link href="/generate-noqr">Generate ID without qr code feature</Link>
-        </h1>
+        <Link href="/generate-noqr">
+          <h1 className="text-5xl mt-2 md:text-[5rem] leading-normal font-extrabold text-gray-700 border-4 border-green-200 p-4 bg-green-400 rounded-[25px]">
+            Generate ID without qr code feature
+          </h1>
+        </Link>
         <h1 className="text-5xl mt-10 md:text-[5rem] leading-normal font-extrabold text-gray-700 border-4 border-green-200 p-4 bg-green-400 rounded-[25px]">
           {session ? (
             <Link href="/generate">Generate ID with qr code feature</Link>
