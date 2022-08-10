@@ -126,7 +126,7 @@ const IdCard: React.FC<IdCardTypes> = ({
           >
             {course}
           </h1>
-          <h1 className="text-center text-white text-xs font-light -mt-[3px]">
+          <h1 className="text-center text-white text-xs font-light -mt-[0.5px]">
             COURSE
           </h1>
           <h1 className="text-center leading-none text-white text-md font-semibold mt-1">
