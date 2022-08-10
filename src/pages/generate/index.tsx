@@ -149,13 +149,13 @@ const GeneratePage: NextPage<{
               Loading please wait...
             </h1>
           )}
-          <div className="flex flex-col max-w-sm ">
+          <div className="flex flex-col max-w-[300px] ">
             <div className="flex flex-col p-1">
               <label htmlFor="name">Name</label>
               <input
                 id="name"
                 type="text"
-                maxLength={40}
+                maxLength={50}
                 value={name ?? "Name goes here"}
                 onChange={(e) => setName(e.target.value)}
               />
@@ -167,7 +167,6 @@ const GeneratePage: NextPage<{
                 onChange={(e) => setCampus(e.target.value)}
                 value={campus}
               >
-                <option value="">select campus</option>
                 {data.campusArray.map((campus, i) => (
                   <option key={i} value={campus}>
                     {campus.toUpperCase()}
@@ -183,11 +182,15 @@ const GeneratePage: NextPage<{
                 value={course}
               >
                 <option value="">select course</option>
-                {data.campusMap[campus]?.courses.map((campus, i) => (
-                  <option key={i} value={campus}>
-                    {campus}
-                  </option>
-                ))}
+                {Object.entries(data.campusMap).map(([campusName, object], i) =>
+                  Object.values(object.courses).map((course, i) => {
+                    return course.trim().length !== 0 ? (
+                      <option key={i} value={course}>
+                        {course}
+                      </option>
+                    ) : null;
+                  })
+                )}
               </select>
             </div>
 

@@ -104,33 +104,40 @@ const IdCard: React.FC<IdCardTypes> = ({
       />
 
       <div className="flex flex-col items-center justify-center">
-        <div className="z-10 absolute top-[170.5px] ml-[3.359px] w-[172px] h-[170px]  aspect-w-square">
+        <div className="z-10 absolute top-[161px] ml-[3.359px] w-[182px] h-[180px]  aspect-w-square">
           <img
-            className="absolute rounded-full object-cover left-[-0.68px] top-0"
+            className="absolute rounded-full object-cover left-[-0.68px] top-[1px]"
             src={picture ? picture : "/image-placeholder.png"}
-            crossOrigin="anonymous"
             alt="id picture"
           />
         </div>
-        <div className="z-10 max-w-[300px] mt-[365px]">
-          <h1 className="text-center leading-none text-white text-lg font-normal">
-            {name.trim().length === 0 ? defaultName : name}
+        <div className="z-20 max-w-[310px] mt-[355px]">
+          <h1 className="text-center leading-none text-white text-lg font-semibold">
+            {name.trim().length === 0
+              ? defaultName.toUpperCase()
+              : name.toUpperCase()}
           </h1>
           <h1 className="text-center text-white text-sm font-light">
             {studentID}
           </h1>
           <h1
             style={{ marginTop: spacing ?? undefined }}
-            className="text-center leading-tight mt-2 text-white text-lg font-normal"
+            className="text-center leading-tight mt-2 text-white text-md font-semibold"
           >
             {course}
           </h1>
-          <h1 className="text-center leading-none text-white text-lg font-normal">
+          <h1 className="text-center text-white text-xs font-light -mt-[3px]">
+            COURSE
+          </h1>
+          <h1 className="text-center leading-none text-white text-md font-semibold mt-1">
             {campus.toUpperCase()}
+          </h1>
+          <h1 className="text-center text-white text-xs font-light -mt-[0.5px]">
+            CAMPUS
           </h1>
         </div>
         {withQr && (
-          <div className="z-10 mt-[-1px] justify-center">
+          <div className="z-10 mt-[-4px] ml-1 justify-center">
             <QRCode
               size={114}
               logoHeight={100}

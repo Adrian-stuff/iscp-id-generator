@@ -28,9 +28,7 @@ const GeneratePage: NextPage<{
   const [previewImage, setPreviewImage] = useState("");
   const [selectedImage, setSelectedImage] = useState("");
   const [name, setName] = useState("");
-  const [course, setCourse] = useState(
-    data.campusMap[data.campusArray[0] as string]?.courses[0] as string
-  );
+  const [course, setCourse] = useState("BS IN AERO-NAUTICAL ENGINEERING");
   const [campus, setCampus] = useState(data.campusArray[0] as string);
   const [studentID, setStudentID] = useState("");
   const [isLoading, setIsLoading] = useState(false);
@@ -109,7 +107,7 @@ const GeneratePage: NextPage<{
                 ? "/Cute-Cat.jpg"
                 : selectedImage
             }
-            spacing={45}
+            spacing={30}
             campus={campus}
             course={course}
             withQr={false}
@@ -122,7 +120,7 @@ const GeneratePage: NextPage<{
               Loading please wait...
             </h1>
           )}
-          <div className="flex flex-col max-w-sm ">
+          <div className="max-w-[300px]">
             <div className="flex flex-col p-1">
               <h1 className="font-bold">Required lahat</h1>
               <label htmlFor="name">Name </label>
@@ -130,8 +128,8 @@ const GeneratePage: NextPage<{
                 required
                 id="name"
                 type="text"
-                maxLength={40}
-                defaultValue="Meow Meow Batumbakal"
+                maxLength={50}
+                // defaultValue="Meow Meow Batumbakal"
                 value={name.trim().length !== 0 ? name : undefined}
                 onChange={(e) => setName(e.target.value)}
               />
@@ -144,7 +142,6 @@ const GeneratePage: NextPage<{
                 onChange={(e) => setCampus(e.target.value)}
                 value={campus}
               >
-                <option value="">select campus</option>
                 {data.campusArray.map((campus, i) => (
                   <option key={i} value={campus}>
                     {campus.toUpperCase()}
@@ -159,12 +156,15 @@ const GeneratePage: NextPage<{
                 onChange={(e) => setCourse(e.target.value)}
                 value={course}
               >
-                <option value="">select course</option>
-                {data.campusMap[campus]?.courses.map((campus, i) => (
-                  <option key={i} value={campus}>
-                    {campus}
-                  </option>
-                ))}
+                {Object.entries(data.campusMap).map(([campusName, object], i) =>
+                  Object.values(object.courses).map((course, i) => {
+                    return course.trim().length !== 0 ? (
+                      <option key={i} value={course}>
+                        {course}
+                      </option>
+                    ) : null;
+                  })
+                )}
               </select>
             </div>
             <div className="flex flex-col p-1">
