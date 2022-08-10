@@ -28,11 +28,11 @@ const Id: NextPage<{ userData: UserData; image: string }> = ({
         <img src={image} alt={userData.student_info.name} />
       </div>
       <div className="mt-2 flex flex-row items-center justify-center ">
-        <a href="/">
-          <div className="border-2 rounded-lg p-2 font-semibold text-lg bg-blue-300">
+        <Link href="/">
+          <div className="border-2 rounded-lg p-2 font-semibold text-lg bg-blue-300 cursor-pointer">
             Generate your own id here
           </div>
-        </a>
+        </Link>
       </div>
       <Credits></Credits>
     </>
