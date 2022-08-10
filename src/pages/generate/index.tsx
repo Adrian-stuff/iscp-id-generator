@@ -1,7 +1,7 @@
 import { toBlob, toPng } from "html-to-image";
 import { GetServerSideProps, NextPage } from "next";
 import Head from "next/head";
-import { ChangeEvent, useEffect, useRef, useState } from "react";
+import { ChangeEvent, useEffect, useMemo, useRef, useState } from "react";
 import IdCard from "../../components/id";
 import { RandomUser } from "../../types/mockData";
 import { DefaultSession, Session, unstable_getServerSession } from "next-auth";
@@ -49,38 +49,35 @@ const GeneratePage: NextPage<{
       : "https://www.youtube.com/watch?v=dQw4w9WgXcQ"
   );
 
-  const [campusOptions, setCampusOptions] = useState([
-    { value: "", label: "" },
-  ]);
-  const [courseOptions, setCourseOptions] = useState([
-    { value: "", label: "" },
-  ]);
+  const campusOptions = useMemo(
+    () =>
+      data.campusArray.map((val) => {
+        return { value: val, label: val };
+      }),
+
+    []
+  );
+  const courseOptions = useMemo(() => {
+    const arrays: string[] = [];
+    Object.values(data.campusMap).map((val) => arrays.push(...val.courses));
+
+    return arrays
+      .filter((val) => val.trim().length !== 0)
+      .map((val) => {
+        return { value: val, label: val };
+      });
+  }, []);
   const [isLoading, setIsLoading] = useState(false);
 
   const fileRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
-    const arrays: string[] = [];
-    Object.values(data.campusMap).map((val) => arrays.push(...val.courses));
-
-    setCampusOptions(
-      data.campusArray.map((val) => {
-        return { value: val, label: val };
-      })
-    );
-    setCourseOptions(
-      arrays
-        .filter((val) => val.trim().length !== 0)
-        .map((val) => {
-          return { value: val, label: val };
-        })
-    );
     if (studentID.length === 0) {
       const randomID = generateRandomID();
       setStudentID(randomID);
       setQRCode(`https://iscpid.vercel.app/s/${randomID}`);
     }
-  }, [data.campusArray, data.campusMap]);
+  }, []);
   const generateImage = () => {
     setIsLoading(true);
     setPreviewImage("");

@@ -1,13 +1,11 @@
-import { toBlob, toPng } from "html-to-image";
+import { toBlob } from "html-to-image";
 import { GetServerSideProps, NextPage } from "next";
 import Head from "next/head";
-import { ChangeEvent, useEffect, useRef, useState } from "react";
+import { ChangeEvent, useEffect, useMemo, useRef, useState } from "react";
 import IdCard from "../../components/id";
-import { RandomUser } from "../../types/mockData";
-import { DefaultSession, Session, unstable_getServerSession } from "next-auth";
-import { authOptions } from "../api/auth/[...nextauth]";
+import { Session } from "next-auth";
 import { generateRandomID } from "../../lib/randomID";
-import { getUserWithEmail, setUser, UserData } from "../../models/userModel";
+import { UserData } from "../../models/userModel";
 import { CampusMap, getCampuses } from "../../models/iscpData";
 import Credits from "../../components/credits";
 import Select from "react-select";
@@ -30,34 +28,31 @@ const GeneratePage: NextPage<{
   const [isLoading, setIsLoading] = useState(false);
   const [useDefaultImage, setUseDefaultImage] = useState(false);
 
-  const [campusOptions, setCampusOptions] = useState([
-    { value: "", label: "" },
-  ]);
-  const [courseOptions, setCourseOptions] = useState([
-    { value: "", label: "" },
-  ]);
+  const campusOptions = useMemo(
+    () =>
+      data.campusArray.map((val) => {
+        return { value: val, label: val };
+      }),
+
+    []
+  );
+  const courseOptions = useMemo(() => {
+    const arrays: string[] = [];
+    Object.values(data.campusMap).map((val) => arrays.push(...val.courses));
+
+    return arrays
+      .filter((val) => val.trim().length !== 0)
+      .map((val) => {
+        return { value: val, label: val };
+      });
+  }, []);
 
   const fileRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
-    const arrays: string[] = [];
-    Object.values(data.campusMap).map((val) => arrays.push(...val.courses));
-    setCampusOptions(
-      data.campusArray.map((val) => {
-        return { value: val, label: val };
-      })
-    );
-    setCourseOptions(
-      arrays
-        .filter((val) => val.trim().length !== 0)
-        .map((val) => {
-          return { value: val, label: val };
-        })
-    );
-
     const randomID = generateRandomID();
     setStudentID(randomID);
-  }, [data.campusArray, data.campusMap]);
+  }, []);
   const generateImage = () => {
     if (
       name.trim().length === 0 ||
