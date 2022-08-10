@@ -1,5 +1,7 @@
 import { GetServerSideProps, NextPage } from "next";
 import Head from "next/head";
+import Link from "next/link";
+import Credits from "../../components/credits";
 import IdCard from "../../components/id";
 import { getIDImage } from "../../lib/storage";
 import { getUserWithID, UserData } from "../../models/userModel";
@@ -25,6 +27,14 @@ const Id: NextPage<{ userData: UserData; image: string }> = ({
       <div className="flex items-center justify-center py-3">
         <img src={image} alt={userData.student_info.name} />
       </div>
+      <div className="mt-2 flex flex-row items-center justify-center ">
+        <a href="/">
+          <div className="border-2 rounded-lg p-2 font-semibold text-lg bg-blue-300">
+            Generate your own id here
+          </div>
+        </a>
+      </div>
+      <Credits></Credits>
     </>
   );
 };
