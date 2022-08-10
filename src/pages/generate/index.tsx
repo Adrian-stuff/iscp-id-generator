@@ -16,6 +16,8 @@ import {
 import { getUserWithEmail, setUser, UserData } from "../../models/userModel";
 import { CampusMap, getCampuses } from "../../models/iscpData";
 import Credits from "../../components/credits";
+import Select from "react-select";
+
 const GeneratePage: NextPage<{
   data: {
     session: Session;
@@ -46,11 +48,33 @@ const GeneratePage: NextPage<{
       ? `https://iscpid.vercel.app/s/${data.user.student_id}`
       : "https://www.youtube.com/watch?v=dQw4w9WgXcQ"
   );
+
+  const [campusOptions, setCampusOptions] = useState([
+    { value: "", label: "" },
+  ]);
+  const [courseOptions, setCourseOptions] = useState([
+    { value: "", label: "" },
+  ]);
   const [isLoading, setIsLoading] = useState(false);
 
   const fileRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
+    const arrays: string[] = [];
+    Object.values(data.campusMap).map((val) => arrays.push(...val.courses));
+
+    setCampusOptions(
+      data.campusArray.map((val) => {
+        return { value: val, label: val };
+      })
+    );
+    setCourseOptions(
+      arrays
+        .filter((val) => val.trim().length !== 0)
+        .map((val) => {
+          return { value: val, label: val };
+        })
+    );
     if (studentID.length === 0) {
       const randomID = generateRandomID();
       setStudentID(randomID);
@@ -156,13 +180,21 @@ const GeneratePage: NextPage<{
                 id="name"
                 type="text"
                 maxLength={50}
+                className="rounded-[4px] border-[#cccccc] text-[#333333]"
                 value={name ?? "Name goes here"}
                 onChange={(e) => setName(e.target.value)}
               />
             </div>
             <div className="flex flex-col p-1">
               <label htmlFor="campus">Campus</label>
-              <select
+              <Select
+                id="campus"
+                value={{ value: campus, label: campus }}
+                onChange={(e) => setCampus(e?.value!)}
+                options={campusOptions}
+                isSearchable
+              ></Select>
+              {/* <select
                 id="campus"
                 onChange={(e) => setCampus(e.target.value)}
                 value={campus}
@@ -172,12 +204,18 @@ const GeneratePage: NextPage<{
                     {campus.toUpperCase()}
                   </option>
                 ))}
-              </select>
+              </select> */}
             </div>
             <div className="flex flex-col p-1">
               <label htmlFor="campus">Course</label>
-
-              <select
+              <Select
+                id="campus"
+                value={courseOptions.filter((val) => val.value === course)}
+                onChange={(e) => setCourse(e?.value!)}
+                options={courseOptions}
+                isSearchable
+              ></Select>
+              {/* <select
                 onChange={(e) => setCourse(e.target.value)}
                 value={course}
               >
@@ -190,7 +228,7 @@ const GeneratePage: NextPage<{
                     ) : null;
                   })
                 )}
-              </select>
+              </select> */}
             </div>
 
             <div className="flex flex-col p-1">

@@ -7,15 +7,11 @@ import { RandomUser } from "../../types/mockData";
 import { DefaultSession, Session, unstable_getServerSession } from "next-auth";
 import { authOptions } from "../api/auth/[...nextauth]";
 import { generateRandomID } from "../../lib/randomID";
-import {
-  deleteAvatarImage,
-  getAvatarImage,
-  uploadAvatarImage,
-  uploadIDImage,
-} from "../../lib/storage";
 import { getUserWithEmail, setUser, UserData } from "../../models/userModel";
 import { CampusMap, getCampuses } from "../../models/iscpData";
 import Credits from "../../components/credits";
+import Select from "react-select";
+
 const GeneratePage: NextPage<{
   data: {
     session: Session;
@@ -34,9 +30,31 @@ const GeneratePage: NextPage<{
   const [isLoading, setIsLoading] = useState(false);
   const [useDefaultImage, setUseDefaultImage] = useState(false);
 
+  const [campusOptions, setCampusOptions] = useState([
+    { value: "", label: "" },
+  ]);
+  const [courseOptions, setCourseOptions] = useState([
+    { value: "", label: "" },
+  ]);
+
   const fileRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
+    const arrays: string[] = [];
+    Object.values(data.campusMap).map((val) => arrays.push(...val.courses));
+    setCampusOptions(
+      data.campusArray.map((val) => {
+        return { value: val, label: val };
+      })
+    );
+    setCourseOptions(
+      arrays
+        .filter((val) => val.trim().length !== 0)
+        .map((val) => {
+          return { value: val, label: val };
+        })
+    );
+
     const randomID = generateRandomID();
     setStudentID(randomID);
   }, []);
@@ -130,6 +148,7 @@ const GeneratePage: NextPage<{
                 type="text"
                 maxLength={50}
                 // defaultValue="Meow Meow Batumbakal"
+                className="rounded-[4px] border-[#cccccc] text-[#333333]"
                 value={name.trim().length !== 0 ? name : undefined}
                 onChange={(e) => setName(e.target.value)}
               />
@@ -137,7 +156,14 @@ const GeneratePage: NextPage<{
 
             <div className="flex flex-col p-1">
               <label htmlFor="campus">Campus</label>
-              <select
+              <Select
+                // id="campus"
+                value={{ value: campus, label: campus }}
+                onChange={(e) => setCampus(e?.value!)}
+                options={campusOptions}
+                isSearchable
+              ></Select>
+              {/* <select
                 id="campus"
                 onChange={(e) => setCampus(e.target.value)}
                 value={campus}
@@ -147,12 +173,12 @@ const GeneratePage: NextPage<{
                     {campus.toUpperCase()}
                   </option>
                 ))}
-              </select>
+              </select> */}
             </div>
             <div className="flex flex-col p-1">
               <label htmlFor="campus">Course</label>
 
-              <select
+              {/* <select
                 onChange={(e) => setCourse(e.target.value)}
                 value={course}
               >
@@ -165,7 +191,14 @@ const GeneratePage: NextPage<{
                     ) : null;
                   })
                 )}
-              </select>
+              </select> */}
+              <Select
+                // id="campus"
+                value={courseOptions.filter((val) => val.value === course)}
+                onChange={(e) => setCourse(e?.value!)}
+                options={courseOptions}
+                isSearchable
+              ></Select>
             </div>
             <div className="flex flex-col p-1">
               <label htmlFor="avatarUpload">Upload your image here:</label>
