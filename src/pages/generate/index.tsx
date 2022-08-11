@@ -81,48 +81,49 @@ const GeneratePage: NextPage<{
   const generateImage = () => {
     setIsLoading(true);
     setPreviewImage("");
-    toPng(document.getElementById("idCard") as HTMLElement, {
-      quality: 1,
-      // canvasWidth: 650,
-      // canvasHeight: 412,\400.28px] h-[680.39px
-      width: 400,
-      height: 679,
-      canvasWidth: 400,
-      canvasHeight: 679,
-    })
-      .then((dataUrl) => {
-        setPreviewImage(dataUrl);
-        // uploadImage()
+    // toPng(document.getElementById("idCard") as HTMLElement, {
+    //   quality: 1,
+    //   // canvasWidth: 650,
+    //   // canvasHeight: 412,\400.28px] h-[680.39px
+    //   width: 400,
+    //   height: 679,
+    //   canvasWidth: 400,
+    //   canvasHeight: 679,
+    // })
+    //   .then((dataUrl) => {
+    //     setPreviewImage(dataUrl);
+    //     // uploadImage()
+    //   })
+    //   .catch((e) => console.log(e));
+    if (!isLoading) {
+      toBlob(document.getElementById("idCard") as HTMLElement, {
+        quality: 1,
+        width: 400,
+        height: 679,
+        canvasWidth: 400,
+        canvasHeight: 679,
       })
-      .catch((e) => console.log(e));
+        .then((file) => {
+          if (typeof data.session.user?.email !== "string") return;
+          setUser(data.session.user?.email, {
+            defaultAvatar: data.session.user?.image!.replace(/=s96-c/g, ""),
+            student_id: studentID,
+            student_info: { campus, course, name },
+          });
+          if (file === null) return;
+          uploadIDImage(file, studentID);
+          setIsLoading(false);
+          const url = URL.createObjectURL(file);
+          const link = document.createElement("a");
+          link.href = url;
+          link.download = "ISCP-ID.png";
+          link.click();
+          if (blobImage === undefined) return;
+          uploadAvatarImage(blobImage, studentID);
+        })
 
-    toBlob(document.getElementById("idCard") as HTMLElement, {
-      quality: 1,
-      width: 400,
-      height: 679,
-      canvasWidth: 400,
-      canvasHeight: 679,
-    })
-      .then((file) => {
-        if (typeof data.session.user?.email !== "string") return;
-        setUser(data.session.user?.email, {
-          defaultAvatar: data.session.user?.image!.replace(/=s96-c/g, ""),
-          student_id: studentID,
-          student_info: { campus, course, name },
-        });
-        if (file === null) return;
-        uploadIDImage(file, studentID);
-        setIsLoading(false);
-        const url = URL.createObjectURL(file);
-        const link = document.createElement("a");
-        link.href = url;
-        link.download = "ISCP-ID.png";
-        link.click();
-        if (blobImage === undefined) return;
-        uploadAvatarImage(blobImage, studentID);
-      })
-
-      .catch((e) => console.log("toBlob", e));
+        .catch((e) => console.log("toBlob", e));
+    }
   };
 
   const handleImageChange = (e: ChangeEvent<HTMLInputElement>) => {
@@ -151,7 +152,7 @@ const GeneratePage: NextPage<{
         <link rel="icon" href="/favicon.ico" />
       </Head>
 
-      <main className="container mx-auto px-10 mt-5 items-center justify-center font-montserrat">
+      <main className="container mx-auto min-w-[420px] px-10 mt-5 items-center justify-center font-montserrat">
         <div className="flex items-center justify-center ">
           <IdCard
             name={name}

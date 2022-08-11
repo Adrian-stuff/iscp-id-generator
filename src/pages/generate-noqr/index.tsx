@@ -62,27 +62,28 @@ const GeneratePage: NextPage<{
       alert("baliw k tlga hwahahwa \nSAGUTAN MO LAHAT WOY");
       return;
     }
-
-    setIsLoading(true);
-    setPreviewImage("");
-    toBlob(document.getElementById("idCard") as HTMLElement, {
-      quality: 1,
-      width: 400,
-      height: 679,
-      canvasWidth: 400,
-      canvasHeight: 679,
-    })
-      .then((file) => {
-        if (file === null) return;
-        setIsLoading(false);
-        const url = URL.createObjectURL(file);
-        const link = document.createElement("a");
-        link.href = url;
-        link.download = "ISCP-ID.png";
-        link.click();
+    if (!isLoading) {
+      setIsLoading(true);
+      setPreviewImage("");
+      toBlob(document.getElementById("idCard") as HTMLElement, {
+        quality: 1,
+        width: 400,
+        height: 679,
+        canvasWidth: 400,
+        canvasHeight: 679,
       })
+        .then((file) => {
+          if (file === null) return;
+          setIsLoading(false);
+          const url = URL.createObjectURL(file);
+          const link = document.createElement("a");
+          link.href = url;
+          link.download = "ISCP-ID.png";
+          link.click();
+        })
 
-      .catch((e) => console.log("toBlob", e));
+        .catch((e) => console.log("toBlob", e));
+    }
   };
 
   const handleImageChange = (e: ChangeEvent<HTMLInputElement>) => {
@@ -110,7 +111,7 @@ const GeneratePage: NextPage<{
         <link rel="icon" href="/favicon.ico" />
       </Head>
 
-      <main className="container mx-auto px-10 mt-5 items-center justify-center font-montserrat">
+      <main className="container mx-auto min-w-[420px] px-10 mt-5 items-center justify-center font-montserrat">
         <div className="flex items-center justify-center ">
           <IdCard
             name={name}
