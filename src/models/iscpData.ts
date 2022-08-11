@@ -55,6 +55,8 @@ const getCampuses = async () => {
         "BS PSYCHOLOGY - MAJOR IN LOVE BOMBING",
         "BS PSYCHOLOGY - MAJOR IN GASLIGHTING",
         "BS IN WITCHCRAFT",
+        "BS FINE ARTS - MAJOR IN PROCRASTINATING",
+        "BS IN PROCRASTINATING",
       ],
     },
     "ISCP - Pluto Campus": { courses: [""] },
